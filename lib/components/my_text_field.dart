@@ -18,8 +18,10 @@ class MyTextField extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       decoration: InputDecoration(
+        hintStyle: TextStyle(color: Colors.white),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         labelText: labelText,
+        labelStyle: TextStyle(color: Colors.white),
       ),
     );
   }

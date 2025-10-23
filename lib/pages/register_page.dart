@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_auth/auth_service.dart';
@@ -32,14 +31,12 @@ class _RegisterPageState extends State<RegisterPage> {
   );
   void register() async {
     try {
-      final user = await authService.value.createAccount(
+      await authService.value.createAccount(
         email: controllerEmail.text,
         password: controllerPassword.text,
       );
-      if (user != null) {
-        log('User created');
-        goToHome(context);
-      }
+      log('User created');
+      goToHome(context);
     } on FirebaseAuthException catch (e) {
       setState(() {
         errorMessage = e.message ?? "There is an error";
@@ -51,6 +48,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 13, 27, 13),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
@@ -58,14 +56,16 @@ class _RegisterPageState extends State<RegisterPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  child: Icon(Icons.lock, size: 50, color: Colors.deepPurple),
-                ),
-                SizedBox(height: 25),
                 Text(
                   "Create your account",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                  ),
                 ),
+                SizedBox(height: 20),
+                SizedBox(child: Icon(Icons.key, size: 50, color: Colors.amber)),
                 SizedBox(height: 25),
                 MyTextField(
                   controller: controllerEmail,
@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 15),
                 MyButton(
                   text: "Sign Up",
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Colors.greenAccent[400],
                   onPressed: () {
                     register();
                   },

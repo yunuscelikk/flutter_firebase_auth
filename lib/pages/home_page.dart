@@ -48,6 +48,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: FloatingActionButton(
+                        heroTag: "fab_register",
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -77,6 +78,7 @@ class HomePage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: FloatingActionButton(
+                        heroTag: "fab_login",
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
