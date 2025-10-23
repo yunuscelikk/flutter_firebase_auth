@@ -24,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
     MaterialPageRoute(builder: (context) => const HomePage()),
   );
 
+  final _formKey = GlobalKey<FormState>();
+
   void signIn() async {
     try {
       await authService.value.signIn(
@@ -33,8 +35,15 @@ class _LoginPageState extends State<LoginPage> {
       log('User logged in');
       goToHome(context);
     } on FirebaseAuthException catch (e) {
+      log("FirebaseAuthException: ${e.code}");
       setState(() {
-        errorMessage = e.message ?? "There is an error";
+        if (e.code == 'user-not-found' ||
+            e.code == 'wrong-password' ||
+            e.code == 'invalid-credential') {
+          errorMessage = 'Email or password incorrect';
+        } else {
+          errorMessage = 'Login failed. Try again';
+        }
       });
     }
   }
@@ -47,42 +56,63 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Sign In",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Sign In",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 25),
-                SizedBox(child: Icon(Icons.key, size: 50, color: Colors.amber)),
-                SizedBox(height: 25),
-                MyTextField(
-                  controller: controllerEmail,
-                  obscureText: false,
-                  labelText: "Email",
-                ),
-                const SizedBox(height: 10),
-                MyTextField(
-                  controller: controllerPassword,
-                  obscureText: true,
-                  labelText: "Password",
-                ),
-                const SizedBox(height: 20),
-                MyButton(
-                  onPressed: () {
-                    signIn();
-                  },
-                  text: "Sign In",
-                  backgroundColor: Colors.greenAccent[400],
-                ),
-                SizedBox(height: 15),
-                Text(errorMessage, style: TextStyle(color: Colors.redAccent)),
-              ],
+                  SizedBox(height: 25),
+                  SizedBox(
+                    child: Icon(Icons.key, size: 50, color: Colors.amber),
+                  ),
+                  SizedBox(height: 25),
+                  MyTextField(
+                    controller: controllerEmail,
+                    obscureText: false,
+                    labelText: "Email",
+                    validator: (value) {
+                      if (value == null || value.isEmpty)
+                        return "Email required";
+                      if (!RegExp(
+                        r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value)) {
+                        return "Invalid email format";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  MyTextField(
+                    controller: controllerPassword,
+                    obscureText: true,
+                    labelText: "Password",
+                    validator: (value) {
+                      if (value == null || value.isEmpty)
+                        return "Password required";
+                      if (value.length < 6) return "Minimum 6 characters";
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  MyButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) signIn();
+                    },
+                    text: "Sign In",
+                    backgroundColor: Colors.greenAccent[400],
+                  ),
+                  SizedBox(height: 15),
+                  Text(errorMessage, style: TextStyle(color: Colors.redAccent)),
+                ],
+              ),
             ),
           ),
         ),
