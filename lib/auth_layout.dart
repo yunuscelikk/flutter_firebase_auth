@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_auth/auth_service.dart';
 import 'package:flutter_firebase_auth/pages/app_loading_page.dart';
-import 'package:flutter_firebase_auth/pages/home_page.dart';
+import 'package:flutter_firebase_auth/pages/onboarding_page.dart';
 import 'package:flutter_firebase_auth/pages/login_page.dart';
 
 class AuthLayout extends StatelessWidget {
@@ -22,7 +22,7 @@ class AuthLayout extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               widget = AppLoadingPage();
             } else if (snapshot.hasData) {
-              widget = const HomePage();
+              widget = const OnboardingPage();
             } else {
               widget = pageIfNotConnected ?? const LoginPage();
             }
