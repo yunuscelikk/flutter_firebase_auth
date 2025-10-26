@@ -64,8 +64,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 100),
                       Text(
                         "Create your account",
                         style: TextStyle(
@@ -127,10 +128,10 @@ class _RegisterPageState extends State<RegisterPage> {
                         errorMessage,
                         style: TextStyle(color: Colors.redAccent),
                       ),
-                      const SizedBox(height: 15),
+                      const Spacer(),
                       MyButton(
                         text: "Sign Up",
-                        backgroundColor: Colors.greenAccent[400],
+                        backgroundColor: Colors.greenAccent,
                         onPressed: _isLoading
                             ? null
                             : () {

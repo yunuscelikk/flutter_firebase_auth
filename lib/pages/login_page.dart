@@ -5,6 +5,7 @@ import 'package:flutter_firebase_auth/auth_service.dart';
 import 'package:flutter_firebase_auth/components/my_button.dart';
 import 'package:flutter_firebase_auth/components/my_text_field.dart';
 import 'package:flutter_firebase_auth/pages/home_page.dart';
+import 'package:flutter_firebase_auth/pages/reset_password_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,9 +20,9 @@ class _LoginPageState extends State<LoginPage> {
   String errorMessage = "";
   bool _isLoading = false;
 
-  goToHome(BuildContext context) => Navigator.pushReplacement(
-    context,
+  goToHome(BuildContext context) => Navigator.of(context).pushAndRemoveUntil(
     MaterialPageRoute(builder: (context) => const HomePage()),
+    (route) => false,
   );
 
   final _formKey = GlobalKey<FormState>();
@@ -66,8 +67,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: Form(
                   key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      const SizedBox(height: 100),
                       const Text(
                         "Sign In",
                         style: TextStyle(
@@ -110,17 +112,45 @@ class _LoginPageState extends State<LoginPage> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
-                      MyButton(
-                        onPressed: _isLoading
-                            ? null
-                            : () {
-                                if (_formKey.currentState!.validate()) {
-                                  signIn();
-                                }
-                              },
-                        text: "Sign In",
-                        backgroundColor: Colors.greenAccent[400],
+                      SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            child: Text(
+                              "Reset Password",
+                              style: TextStyle(color: Colors.greenAccent),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) {
+                                    return ResetPasswordPage(
+                                      email: controllerEmail.text,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Column(
+                        children: [
+                          MyButton(
+                            onPressed: _isLoading
+                                ? null
+                                : () {
+                                    if (_formKey.currentState!.validate()) {
+                                      signIn();
+                                    }
+                                  },
+                            text: "Sign In",
+                            backgroundColor: Colors.greenAccent,
+                          ),
+                        ],
                       ),
                       const SizedBox(height: 15),
                       Text(
